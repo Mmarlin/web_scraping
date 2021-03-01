@@ -1,4 +1,5 @@
 import time
+import xlsxwriter
 
 from selenium import webdriver
 from selenium.webdriver.support.select import Select
@@ -6,77 +7,85 @@ from time import sleep
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver import ActionChains
 
+
 browser = webdriver.Chrome('C:\\Users\\marli\\Downloads\\chromedriver_win32\\chromedriver.exe')
 browser.get('https://www.kfzteile24.de/ersatzteile-verschleissteile/bremsanlage/bremsscheiben?ktypnr=1157')
+
 '''
+# Brand Selection
 brand = Select(browser.find_element_by_class_name("brandSelector"))
 brand.select_by_visible_text("AUDI")
 sleep(2)
 
+# Model Selection
 model = Select(browser.find_element_by_class_name("modelSelector"))
 model.select_by_index(1)
 sleep(2)
 
+# Type Selector
 ctype = Select(browser.find_element_by_class_name("typeSelector"))
 ctype.select_by_index(1)
 sleep(4)
 
+# Confirm Button
 browser.find_element_by_id('confirmKfzButton').click()
 sleep(2)
 
+# Breaking System selection
 braking=browser.find_element_by_xpath("//*[contains(text(), 'Bremsanlage')]").click()
 sleep(2)
 
+# Break Disc selection
 braking=browser.find_element_by_xpath("//*[contains(text(), 'Bremsscheiben')]").click()
 sleep(2)
-
+'''
+# Scroll down to the bottom of the page
 l=browser.find_element_by_xpath("//*[contains(text(), 'Copyright © 2021 kfzteile24.de - Alle Rechte vorbehalten')]")
 # action object creation to scroll
 a = ActionChains(browser)
 a.move_to_element(l).perform()
-sleep(3)
+sleep(10)
 
-'''
-image = browser.find_element_by_class_name('art-name')
-n=image.find_element_by_tag_name('img')
-print(type(n))
 
-'''
+
+
+# Create a workbook and add a worksheet.
+workbook = xlsxwriter.Workbook('test.xlsx')
+worksheet = workbook.add_worksheet()
+
+# Start from the first cell. Rows and columns are zero indexed.
+row = 0
+col = 0 
+
+# Writing the fetched content in Excel file
 names  =  browser.find_elements_by_class_name("art-nr")
 price = browser.find_elements_by_class_name("preis")
 for i in names:
     s=i.text
     s=s.strip('Art.-Nr. ')
+    worksheet.write(row, col,s)
     print(s)
+    row +=1
+row = 0
+col +=1
 for i in price:
-    print(i.text)
+    i = i.text
+    worksheet.write(row, col,i)
+    print(i)
+    row +=1
 
-'''
+row = 0
+col +=1
+image = browser.find_elements_by_class_name('art-name')
+for i in image:
 
+    n=i.find_element_by_tag_name('img')
+    n=n.get_attribute('alt')
+    worksheet.write(row, col,n)
+    print(n)
+    row +=1
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+workbook.close()
 
 
 
