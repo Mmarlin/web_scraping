@@ -38,7 +38,7 @@ from selenium.webdriver import ActionChains
 
 
 browser = webdriver.Chrome('C:\\Users\\marlin.shah\\Downloads\\chromedriver_win32\\chromedriver')
-browser.get('https://www.kfzteile24.de/ersatzteile-verschleissteile/bremsanlage/bremsscheiben?ktypnr=1146')
+browser.get('https://www.kfzteile24.de')
 
 
 
@@ -47,9 +47,9 @@ browser.get('https://www.kfzteile24.de/ersatzteile-verschleissteile/bremsanlage/
 # audi_model_option_value = ['10', '13', '19', '53', '25', '30', '36', '48', '172', '176', '1940', '433', '1500', '1501', '1502', '4553', '8554', '14', '26', '31', '1', '6', '8555', '78', '84', '8604', '40147', '9730', '38933', '4382', '1557', '4955', '10253', '6724', '11611', '11282', '40796', '5143', '10459', '40531', '253', '4731', '5376', '6418', '14695', '8031', '36378', '3485', '4797', '5377', '6988', '14696', '4840', '6243', '36928', '8030', '37293', '8159', '37116', '258', '38843', '1891', '5110', '9154', '39591', '5546', '10161', '3468', '38844', '3395', '5381', '9627', '8986', '38471', '265', '4935', '8627', '38219', '4632', '438', '194', '202', '39213', '40160', '8552', '8553', '36543', '9731', '38997', '40155', '7534', '37161', '5461', '14159', '38836', '3910', '6244', '14514', '8262', '36765', '4554', '5544', '3851', '12912', '5608', '4089', '13274', '485']
 # audi_type_option = ['2.0, 100 PS, 74 kW, 12/90 bis 07/94', '2.0 E, 115 PS, 85 kW, 12/90 bis 07/94', '2.0 E 16V, 140 PS, 103 kW, 01/92 bis 07/94', '2.0 E quattro, 115 PS, 85 kW, 12/90 bis 07/92', '2.3 E, 133 PS, 98 kW, 12/90 bis 07/94', '2.3 E quattro, 133 PS, 98 kW, 12/90 bis 07/94', '2.4 D, 82 PS, 60 kW, 12/90 bis 07/94', '2.5 TDI, 115 PS, 85 kW, 12/90 bis 07/94', '2.6, 150 PS, 110 kW, 03/92 bis 07/94', '2.6 quattro, 150 PS, 110 kW, 04/92 bis 07/94', '2.8 E, 174 PS, 128 kW, 12/90 bis 07/94', '2.8 E quattro, 174 PS, 128 kW, 12/90 bis 07/94', 'S4 Turbo quattro, 230 PS, 169 kW, 08/91 bis 07/94', 'S4 V8 quattro, 280 PS, 206 kW, 10/92 bis 07/94']
 # audi_type_option_value = ['1381', '1383', '12481', '4996', '1384', '1388', '1379', '1380', '1385', '1389', '1386', '1390', '1387', '4670']
+['--- Typ wählen ---', '1.8, 75 PS, 55 kW, 08/82 bis 12/87', '1.8, 88 PS, 65 kW, 02/86 bis 07/90', '1.8, 90 PS, 66 kW, 08/83 bis 07/89', '1.8 Cat, 90 PS, 66 kW, 03/85 bis 11/90', '1.8 Cat quattro, 90 PS, 66 kW, 08/85 bis 10/90', '1.8 quattro, 88 PS, 65 kW, 08/86 bis 07/90', '1.8 quattro, 90 PS, 66 kW, 10/84 bis 07/88', '1.9, 100 PS, 74 kW, 02/83 bis 07/84', '2.0, 113 PS, 83 kW, 09/86 bis 11/87', '2.0 D, 70 PS, 51 kW, 03/83 bis 11/90', '2.0 E, 115 PS, 85 kW, 01/85 bis 12/87', '2.0 E Cat, 115 PS, 85 kW, 01/88 bis 11/90', '2.0 TD, 87 PS, 64 kW, 03/83 bis 10/87', '2.0 TD, 100 PS, 74 kW, 03/88 bis 11/90', '2.1, 136 PS, 100 kW, 08/82 bis 07/84', '2.2, 115 PS, 85 kW, 10/84 bis 09/86', '2.2, 137 PS, 101 kW, 08/84 bis 12/88', '2.2 Cat, 137 PS, 101 kW, 06/89 bis 11/90', '2.2 Cat quattro, 137 PS, 101 kW, 06/89 bis 11/90', '2.2 E quattro, 120 PS, 88 kW, 08/85 bis 07/86', '2.2 quattro, 137 PS, 101 kW, 08/84 bis 12/88', '2.2 Turbo, 165 PS, 121 kW, 08/86 bis 11/90', '2.2 Turbo quattro, 165 PS, 121 kW, 08/86 bis 11/90', '2.3, 136 PS, 100 kW, 08/86 bis 11/90', '2.3, 133 PS, 98 kW, 03/90 bis 11/90', '2.3 E quattro, 136 PS, 100 kW, 08/86 bis 11/90', '2.3 quattro, 133 PS, 98 kW, 01/90 bis 11/90', '2.4 D, 82 PS, 60 kW, 08/89 bis 11/90', '2.5 TDI, 120 PS, 88 kW, 01/90 bis 11/90']
+['1415', '1417', '1418', '8758', '6000', '5998', '8057', '5993', '1419', '1426', '8159', '1420', '1427', '1428', '1421', '1422', '1423', '8161', '8163', '5005', '1455', '1424', '1457', '1425', '1430', '1460', '1462', '5007', '1429']
 
-
-'''
 def reach_path():
 
     # Brand Selection
@@ -59,11 +59,11 @@ def reach_path():
 
     # Model Selection
     model = Select(browser.find_element_by_class_name("modelSelector"))
-    model.select_by_index(3)
+    model.select_by_index(6)
     sleep(2)
+reach_path()
 
-
-
+'''
     # Type Selector
     ctype = Select(browser.find_element_by_class_name("typeSelector"))
     ctype.select_by_index(1)
@@ -85,80 +85,6 @@ def reach_path():
 
 '''
 
-# Scroll down to the bottom of the page
-l=browser.find_element_by_xpath("//*[contains(text(), 'Copyright © 2021 kfzteile24.de - Alle Rechte vorbehalten')]")
-# action object creation to scroll
-a = ActionChains(browser)
-a.move_to_element(l).perform()
-sleep(15)
-
-
-
-
-# Create a workbook and add a worksheet.
-workbook = xlsxwriter.Workbook('test.xlsx')
-worksheet = workbook.add_worksheet()
-
-# Start from the first cell. Rows and columns are zero indexed.
-row = 0
-col = 0 
-
-# Writing the fetched content in Excel file
-names  =  browser.find_elements_by_class_name("art-nr")
-price = browser.find_elements_by_class_name("preis")
-for i in names:
-    s=i.text
-    s=s.strip('Art.-Nr. ')
-    worksheet.write(row, col,s)
-    row +=1
-print(len(names))
-row = 0
-col +=1
-for i in price:
-    i = i.text
-    worksheet.write(row, col,i)
-    row +=1
-print(len(price))
-row = 0
-col +=1
-image = browser.find_elements_by_class_name('art-name')
-
-for i in image:
-
-    n=i.find_element_by_tag_name('img')
-    n=n.get_attribute('alt')
-    worksheet.write(row, col,n)
-    
-    row +=1
-print(len(image))
-workbook.close()
-
-browser.close()
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-'''
-
 # Code for printing Brand,Model,Type 
 m = browser.find_element_by_class_name("typeSelector")
 options = [x for x in m.find_elements_by_tag_name("option")]
@@ -170,49 +96,3 @@ for element in options:
        
 print(name)
 print(value)
-
-'''
-
-
-
-
-
-
-
-
-
-
-'''
-browser.find_element_by_link_text('Sign in').click()
-sleep(2)
-browser.find_element_by_id('username').send_keys('marlinshah124@gmail.com')
-sleep(1)
-browser.find_element_by_id('password').send_keys('Marlinshah@124')
-sleep(1)
-browser.find_element_by_xpath("//button[@type='submit']").click()
-sleep(2)
-names=['Abhi kevadiya']
-ctr=0
-for name in names:
-
-    browser.find_element_by_xpath("//input[@type='text']").send_keys(name)
-    browser.find_element_by_xpath("//input[@type='text']").send_keys(Keys.RETURN)
-    sleep(3)
-    browser.find_element_by_xpath("//button[text()='Message']").click()
-    message='hey dummy mssg from bot!'
-    sleep(1)
-    if ctr==0:
-        browser.find_element_by_xpath("//div[@role='textbox']").send_keys(message)
-    else:
-        browser.find_elements_by_xpath("//div[@role='textbox']")[ctr].send_keys(message)
-    sleep(1)
-
-    if ctr==0:
-        browser.find_element_by_xpath("//button[@type='submit']").click()
-    else:
-        browser.find_elements_by_xpath("//button[@type='submit']")[ctr].click()
-
-    ctr = ctr+1
-    sleep(1)
-    browser.find_element_by_xpath("//input[@type='text']").clear()
-'''
