@@ -9,9 +9,9 @@ from selenium.webdriver import ActionChains
 
 
 browser = webdriver.Chrome('C:\\Users\\marli\\Downloads\\chromedriver_win32\\chromedriver.exe')
-browser.get('https://www.kfzteile24.de')
+browser.get('https://www.kfzteile24.de/ersatzteile-verschleissteile/bremsanlage/bremsscheiben?ktypnr=1157')
 
-
+'''
 # Brand Selection
 brand = Select(browser.find_element_by_class_name("brandSelector"))
 brand.select_by_visible_text("AUDI")
@@ -26,7 +26,7 @@ sleep(2)
 ctype = Select(browser.find_element_by_class_name("typeSelector"))
 ctype.select_by_index(1)
 sleep(4)
-
+'''
 
 '''
 # Confirm Button
@@ -40,6 +40,7 @@ sleep(2)
 # Break Disc selection
 braking=browser.find_element_by_xpath("//*[contains(text(), 'Bremsscheiben')]").click()
 sleep(2)
+'''
 
 # Scroll down to the bottom of the page
 l=browser.find_element_by_xpath("//*[contains(text(), 'Copyright © 2021 kfzteile24.de - Alle Rechte vorbehalten')]")
@@ -90,7 +91,7 @@ for i in image:
 workbook.close()
 
 
-'''
+
 
 
 
