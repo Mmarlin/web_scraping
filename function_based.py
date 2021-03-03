@@ -43,19 +43,19 @@ def brand_selector():
     brand = Select(brand_selector)
     brand.select_by_visible_text(brand_name)
     sleep(2)
-    print("ALL BRANDS AS BELOW")
-    print(brand_list_name)
-    print("--------------------------------------------------------------------------------")
-    print(brand_list_id)
+    #print("ALL BRANDS AS BELOW")
+    #print(brand_list_name)
+    #print("--------------------------------------------------------------------------------")
+    #print(brand_list_id)
 
-def model_selector():
+def model_selector(mode_s):
     
     # Model Selection
     brand_model_name = []
     brand_model_id = []
     model_selector = browser.find_element_by_class_name('modelSelector')
     models = [x for x in model_selector.find_elements_by_tag_name("option")]
-    ind=1
+    ind=mode_s
     for model in models:
         brand_model_name.append(model.text)
         brand_model_id.append(model.get_attribute("value"))
@@ -65,38 +65,47 @@ def model_selector():
     #print(total_model)
     model = Select(model_selector)
     model.select_by_index(ind)
-    print("ALL MODELS OF AUDI")
-    print(brand_model_name)
-    print("--------------------------------------------------------------------------------")
-    print(brand_model_id)
+    #print("ALL MODELS OF AUDI")
+    #print(brand_model_name)
+    #print("--------------------------------------------------------------------------------")
+    #print(brand_model_id)
     sleep(2)
+    return(brand_model_id)
 
-def type_selector():
+def type_selector(model_id):
 
     # Type Selection
     brand_model_type_name = [] 
     brand_model_type_id = []
     type_selector = browser.find_element_by_class_name("typeSelector")
     model_types = [x for x in type_selector.find_elements_by_tag_name("option")]
-    t=1
+ 
     for model_type in model_types:
         brand_model_type_id.append(model_type.get_attribute("value"))
         brand_model_type_name.append(model_type.text)
     brand_model_type_id.pop(0)
     brand_model_type_name.pop(0)
 
-    typ = Select(type_selector)
-    typ.select_by_index(t)
-    print("ALL TYPES FOR MODEL 1 OF AUDI")
-    print(brand_model_type_name)
-    print("-------------------------------------------------------------------------------")
-    print(brand_model_type_id)
+    #typ = Select(type_selector)
+    #typ.select_by_index(model_id)
+    #print("ALL TYPES FOR MODEL "," OF AUDI")
+    #print(brand_model_type_name)
+    #print("-------------------------------------------------------------------------------")
+    #print(brand_model_type_id)
+    return(brand_model_type_id)
 
 
 def reach_path():
     brand_selector()
-    model_selector()
-    type_selector()
+    for i in range(109):
+        total_models = model_selector(i)
+        total_model_types = []
+        for total_model in total_models:
+            print(total_model)
+            model_types = type_selector(total_model)
+            total_model_types.append(model_types)
+    print(len(total_model_types))
+    
 
 
 
