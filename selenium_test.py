@@ -11,6 +11,7 @@ from selenium.webdriver import ActionChains
 
 browser = webdriver.Chrome('C:\\Users\\marlin.shah\\Downloads\\chromedriver_win32\\chromedriver')
 base_link = 'https://www.kfzteile24.de'
+braking_system_link = 'https://www.kfzteile24.de/ersatzteile-verschleissteile/bremsanlage?ktypnr='
 pre = 'https://www.kfzteile24.de/ersatzteile-verschleissteile/bremsanlage/bremsscheiben?ktypnr='
 
 #browser.get('https://www.kfzteile24.de/ersatzteile-verschleissteile/bremsanlage/bremsscheiben?ktypnr=1325')
@@ -30,273 +31,199 @@ pre = 'https://www.kfzteile24.de/ersatzteile-verschleissteile/bremsanlage/bremss
 
 
 
-def scroll_bottom():
+def scroll_bottom(total_brake_disc):
     # Scroll down to the bottom of the page
     l=browser.find_element_by_xpath("//*[contains(text(), 'Copyright © 2021 kfzteile24.de - Alle Rechte vorbehalten')]")
     # action object creation to scroll
     a = ActionChains(browser)
     a.move_to_element(l).perform()
-    sleep(15)
+    sleep(int(total_brake_disc/10))
 
-def excel_task(past_excel_name,excel_name,type_name):
+def fetching(total_brake_disc):
 
-    # Start from the first cell. Rows and columns are zero indexed.
-    row = 0
-    col = 1 
-
-    
-    # Writing the fetched content in Excel file
-    names  =  browser.find_elements_by_class_name("art-nr")
+    # Fetching the content from the web page
+    names  =  browser.find_elements_by_class_name("art-name")
     price = browser.find_elements_by_class_name("preis")
+    image = browser.find_elements_by_class_name('art-name')
     n_list=[]
     p_list=[]
     c_list=[]
+    
     for nm in names:
         s=nm.text
-        s=s.strip('Art.-Nr. ')
-        n_list.append(s)
-        #worksheet.write(row, col-1,type_name)
-        #worksheet.write(row, col,s)
-        row +=1
-        #print(s)
-    print(len(names))
-    row = 0
-    col +=1
+        s=s.splitlines()
+        if(len(s)>1):
+            s=s[1]
+            s= s.strip('Art.-Nr. ')
+            n_list.append(s)
+  
     for ps in price:
         ps = ps.text
         p_list.append(ps)
-        #worksheet.write(row, col,ps)
-        row +=1
-        #print(ps)
-    print(len(price))
-    row = 0
-    col +=1
-    image = browser.find_elements_by_class_name('art-name')
+    
     for i in image:
+
         try:
             n=i.find_element_by_tag_name('img')
             n=n.get_attribute('alt')
             c_list.append(n)
-            #worksheet.write(row, col,n)
         except:
-            pass    
-        row +=1
-    print(len(image))
+            pass
+    
+    print("Total names: ",len(names))
+    print("Names fetched: ",len(n_list))
+    print("Price fetched: ",len(p_list))    
+    print("Images fetched: ",len(c_list))
+    
+    if(len(n_list) == total_brake_disc and len(p_list) == total_brake_disc and len(c_list) == total_brake_disc and len(n_list) == len(p_list) and len(n_list) == len(c_list) ):
+        return n_list,p_list,c_list
+    else:
+        print("Retrying:")
+        return fetching(total_brake_disc)
 
+def post_fetching(brand_name,model_name,type_name,n_list,p_list,c_list):
 
+    # Making a list for appending in the excel file
+    final_list = []
+    brand_type = [brand_name]*len((n_list))
+    car_type=[type_name]*len(n_list)
+    current_model_name = [model_name]*len(n_list)
+    for i in range(len(n_list)):
+            final_list.append(['Bremsscheiben',brand_type[i], current_model_name[i], car_type[i], n_list[i], p_list[i], c_list[i]])
+    return(final_list)
+
+def excel_task(past_excel_name, excel_name, final_list):
+    
     #load previous workbook 
     wb=openpyxl.load_workbook(past_excel_name)
 
     # Load sheet 
-    sh1=wb['model 4']
+    sh1=wb['new']
 
     #get max number of rows in sheet
     row=sh1.max_row
 
     #get max number of columns in sheet
     column=sh1.max_column
-    final=[]
-    car_type=[type_name]*len(image)
-    
-    for i in range(len(image)):
-        if(n_list[i] and p_list[i] and c_list[i]):
-            final.append([car_type[i],n_list[i],p_list[i],c_list[i]])
-            continue
 
     print("Row=",row,"\nColumn=",column)
-    for f in final:
+    # Appeding the previous and making a new file 
+    for f in final_list:
         sh1.append(f)
     wb.save(excel_name)
+  
+def breaking_system(id):
+    #brake_disc_list = []
+    url = braking_system_link + str(id)
+    browser.get(url)
+    categories = browser.find_element_by_class_name('categories')
+    catgeory_data=categories.text
+    category=catgeory_data.splitlines()
+    print(category)
+    brake_disc = "Bremsscheiben"
+    if(brake_disc in category):
+        brake_disc_index = category.index("Bremsscheiben")
+        brake_disc_total = str(category[brake_disc_index+1])
+        brake_disc_total = brake_disc_total.lstrip("(").rsplit(" ")
+        brake_disc_total = int(brake_disc_total[0])
+        #brake_disc_list.append(brake_disc_total)
+        #print(type(brake_disc_total)," - ",brake_disc_total)
+        return(brake_disc_total)
+    else:
+        return(0)
 
-    
-'''
-    for entry in range(len(price)):
-        worksheet.write(row, col,type_name)
-        worksheet.write(row, col+1,n_list[entry])
-        worksheet.write(row, col+2,p_list[entry])
-        worksheet.write(row, col+3,c_list[entry])
-        row +=1
-'''
-    
-    
 def reach_path():
-    start = 15
-    
-    for l in range(25,108):
-        print("----------------------------------------\n")
-        print("Model -> ",l)
+    start = 1
+    brand_list = ["FIAT"]
+    for brand in range(len(brand_list)):
+        #print("----------------------------------------\n")
+        #print("Model -> ",l)
         browser.get(base_link)
-        # Brand Selection
-        brand = Select(browser.find_element_by_class_name("brandSelector"))
-        brand.select_by_visible_text("AUDI")
-        sleep(2)
-        # Model Selection
-        model = Select(browser.find_element_by_class_name("modelSelector"))
-        model.select_by_index(l)
-        sleep(2)
-        
-    
-        # Code for printing Brand,Model,Type 
-        type_selector = browser.find_element_by_class_name("typeSelector")
-        options = [x for x in type_selector.find_elements_by_tag_name("option")]
-        value=[]
-        name=[]
-        #print("options: ",options)
-        for data in options:
-            value.append(data.get_attribute("value"))
-            name.append(data.text)
-        value.pop(0)
-        name.pop(0)
-        print("Type Names-> ",name)
-        print("Type values-> ",value)
-        audi_type_option = name
-        audi_type_option_value = value
-        for j in range(len(audi_type_option_value)):
-            print("Car type option - ",audi_type_option[j])
-            print("Car Type value - ",audi_type_option_value[j])
-            audi_type= audi_type_option[j]
-             
-            post = audi_type_option_value[j]
-            url = pre + str(post)
-            browser.get(url)
-            scroll_bottom()
-            #excel_name = str(post)+'.xlsx'
-            excel_name = 'testing.xlsx'
-            if(start==15):
 
-                excel_task("1465.xlsx",excel_name,audi_type)
-                start+=1
-                past_type= audi_type_option_value[j]
-                past_excel_name = str(past_type)+'.xlsx'
-            else:
+        # Brand Selection
+
+        brand_select = Select(browser.find_element_by_class_name("brandSelector"))
+        current_brand = brand_list[brand]
+        print("Current Brand - ",current_brand)
+        brand_select.select_by_visible_text(current_brand)
+        sleep(2)
+
+        # Model Selection
+        model_value_list = []
+        model_name_list = []
+        models = browser.find_element_by_class_name("modelSelector")
+        total_models = [x for x in models.find_elements_by_tag_name("option")]
+        #print(total_models)
+        for model in total_models:
+            model_value_list.append(model.get_attribute("value"))
+            model_name_list.append(model.text)
+        print("Total Model = ",model_name_list)
+        sleep(2)
+        model_value_list.pop(0)
+        #current_model = 19
+        for current_model in range(56,len(model_value_list)):
+            current_model_name = model_name_list[current_model]
+            browser.get(base_link)
+            brand_select = Select(browser.find_element_by_class_name("brandSelector"))
+            current_brand = brand_list[brand]
+            print("Current Brand - ",current_brand)
+            sleep(1)
+            brand_select.select_by_visible_text(current_brand)
+            models = browser.find_element_by_class_name("modelSelector")
+            Select_model = Select(models)
+            Select_model.select_by_index(current_model)
+            sleep(2)
+
+            # Type Selection
+            type_selector = browser.find_element_by_class_name("typeSelector")
+            types = [x for x in type_selector.find_elements_by_tag_name("option")]
+            type_value=[]
+            type_name=[]
+            #print("options: ",options)
+            for data in types:
+                type_value.append(data.get_attribute("value"))
+                type_name.append(data.text)
+            type_value.pop(0)
+            type_name.pop(0)
+            print("Type Names-> ",type_name)
+            print("Type values-> ",type_value)
+            audi_type_option = type_name
+            audi_type_option_value = type_value
+            for j in range(len(audi_type_option_value)):
+                total_brake_disc = breaking_system(audi_type_option_value[j])
+                if(total_brake_disc==0):
+                    continue
+                print("Current Model Name - ",current_model_name)   
+                print("Car type option - ",audi_type_option[j])
+                print("Car Type value - ",audi_type_option_value[j])
+                print("Total data - ",total_brake_disc)
+                sleep(int(total_brake_disc/10))
+                audi_type= audi_type_option[j]
                 
-                excel_task(past_excel_name,excel_name,audi_type)
-                past_type= audi_type_option_value[j]
-                past_excel_name = str(past_type)+'.xlsx'
-            #print("start = ",start)
+                post = audi_type_option_value[j]
+                url = pre + str(post)
+                browser.get(url)
+                scroll_bottom(total_brake_disc)
+                excel_name = str(post)+'.xlsx'
                 
+                if(start==1):
+
+                    n_list,p_list,c_list = fetching(total_brake_disc)
+                    final_list = post_fetching(current_brand,current_model_name,audi_type,n_list,p_list,c_list)
+                    excel_task("15592.xlsx",excel_name,final_list)
+                    start+=1
+                    past_type = audi_type_option_value[j]
+                    past_excel_name = str(past_type)+'.xlsx'
+                
+                else:
+                    
+                    n_list,p_list,c_list = fetching(total_brake_disc)
+                    final_list = post_fetching(current_brand,current_model_name,audi_type,n_list,p_list,c_list)
+                    excel_task(past_excel_name, excel_name, final_list)
+                    past_type = audi_type_option_value[j]
+                    past_excel_name = str(past_type)+'.xlsx'
+               
+              
 
 reach_path()
-
-
 browser.close()
-
-
-
-
-
-'''
-# Brand Selection
-brand = Select(browser.find_element_by_class_name("brandSelector"))
-brand.select_by_visible_text("AUDI")
-sleep(2)
-
-# Model Selection
-model = Select(browser.find_element_by_class_name("modelSelector"))
-model.select_by_index(2)
-sleep(2)
-
-# Type Selector
-ctype = Select(browser.find_element_by_class_name("typeSelector"))
-ctype.select_by_index(1)
-sleep(4)
-'''
-
-'''
-# Confirm Button
-browser.find_element_by_id('confirmKfzButton').click()
-sleep(2)
-
-# Breaking System selection
-braking=browser.find_element_by_xpath("//*[contains(text(), 'Bremsanlage')]").click()
-sleep(2)
-
-# Break Disc selection
-braking=browser.find_element_by_xpath("//*[contains(text(), 'Bremsscheiben')]").click()
-sleep(2)
-'''
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-'''
-# Code for printing Brand,Model,Type 
-m = browser.find_element_by_class_name("typeSelector")
-options = [x for x in m.find_elements_by_tag_name("option")]
-value=[]
-name=[]
-for element in options:
-    value.append(element.get_attribute("value"))
-    name.append(element.text)
-       
-print(name)
-
-
-'''
-
-
-
-
-
-
-
-
-
-
-
-'''
-browser.find_element_by_link_text('Sign in').click()
-sleep(2)
-browser.find_element_by_id('username').send_keys('marlinshah124@gmail.com')
-sleep(1)
-browser.find_element_by_id('password').send_keys('Marlinshah@124')
-sleep(1)
-browser.find_element_by_xpath("//button[@type='submit']").click()
-sleep(2)
-names=['Abhi kevadiya']
-ctr=0
-for name in names:
-
-    browser.find_element_by_xpath("//input[@type='text']").send_keys(name)
-    browser.find_element_by_xpath("//input[@type='text']").send_keys(Keys.RETURN)
-    sleep(3)
-    browser.find_element_by_xpath("//button[text()='Message']").click()
-    message='hey dummy mssg from bot!'
-    sleep(1)
-    if ctr==0:
-        browser.find_element_by_xpath("//div[@role='textbox']").send_keys(message)
-    else:
-        browser.find_elements_by_xpath("//div[@role='textbox']")[ctr].send_keys(message)
-    sleep(1)
-
-    if ctr==0:
-        browser.find_element_by_xpath("//button[@type='submit']").click()
-    else:
-        browser.find_elements_by_xpath("//button[@type='submit']")[ctr].click()
-
-    ctr = ctr+1
-    sleep(1)
-    browser.find_element_by_xpath("//input[@type='text']").clear()
-'''
