@@ -42,7 +42,7 @@ mydb = mysql.connector.connect(
 mycursor = mydb.cursor()
 
 
-
+total_sub_category = ['Abgasanlage', 'Achsaufhängung', 'Anhängerkupplung', 'Antrieb: Achse', 'Antrieb: Rad', 'Batterien', 'Bremsanlage', 'Elektrik', 'Filter', 'Getriebe', 'Heizung', 'Informationssysteme', 'Innenausstattung', 'Karosserie', 'Klimaanlage', 'Komfortsysteme', 'Kraftstoffaufbereitung', 'Kraftstoffförderanlage', 'Kühlung', 'Kupplung', 'Lenkung', 'Leuchtmittel', 'Motor', 'Öle', 'Pflegemittel', 'Reifen & Felgen', 'Riementrieb', 'Saisonartikel', 'Scheibenreinigung', 'Scheinwerferreinigung', 'Schließanlage', 'Stoßdämpfer', 'Streetwear', 'Trägersysteme', 'Werkzeug', 'Zubehör', 'Zünd-/Glühanlage']
 
 # Links required to fulfill the fetching
 browser = webdriver.Chrome('C:\\Users\\marli\\Downloads\\chromedriver_win32\\chromedriver.exe',options=options)
