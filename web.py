@@ -26,7 +26,7 @@ base_link = 'https://www.kfzteile24.de'
 
 # Open the workbook and define the worksheet
 book = xlrd.open_workbook("C:\\Users\\marlin.shah\\Desktop\\scraper_masterxls.xls")
-sheet = book.sheet_by_name("exhaust_system")
+sheet = book.sheet_by_name("axel_suspension")
 '''
 # Establish a MySQL connection
 database = mysql.connector.connect (host="localhost", user = "root", passwd = "mshah", db = "scraper")
@@ -36,10 +36,10 @@ database = mysql.connector.connect (host="localhost", user = "root", passwd = "m
 cursor = database.cursor()
 '''
 # Create the INSERT INTO sql query
-query = "INSERT INTO exhaust_system (make, model, type, part_category, part_name, cat1, cat2, cat3, cat4, part_no, price, dealer) VALUES (%s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s)"
+query = "INSERT INTO axel_suspension (ktype, make, model, type, part_category, part_name, cat1, cat2, cat3, cat4, part_no, price, brand) VALUES (%s, %s, %s, %s, %s, %s, %s,%s, %s, %s, %s, %s, %s)"
 
 
-
+count = 0
 def scroll_bottom():
     # Scroll down to the bottom of the page
     l=browser.find_element_by_xpath("//*[contains(text(), 'Copyright © 2021 kfzteile24.de - Alle Rechte vorbehalten')]")
@@ -51,6 +51,7 @@ def scroll_bottom():
 def fetching(count):
     try:
         browser.find_element_by_xpath("//*[contains(text(), '0 Teile passend für:')]")
+        return None,None,None
     except:
         
         # Fetching the content from the web page
@@ -87,7 +88,7 @@ def fetching(count):
         print("Price fetched: ",len(p_list))    
         print("Images fetched: ",len(c_list))
         
-        if(count > 10):
+        if(count > 5):
             print(n_list,p_list,c_list)
             if(len(n_list) == len(p_list) and len(n_list) == len(c_list) ):   
                 count = 0
@@ -101,7 +102,7 @@ def fetching(count):
             return fetching(count)
 
 
-def post_fetching(make, model, model_type, part_category, part_name, cat1, cat2, cat3, cat4, part_no, price, dealer):
+def post_fetching(ktype, make, model, model_type, part_category, part_name, cat1, cat2, cat3, cat4, part_no, price, brand):
 
     # Making a list for appending in the excel file
     final_list = []
@@ -110,7 +111,7 @@ def post_fetching(make, model, model_type, part_category, part_name, cat1, cat2,
     #current_model_name = [model_name]*len(n_list)
     
     for i in range(len(part_no)):
-        final_list.append([make, model, model_type, part_category, part_name, cat1, cat2, cat3, cat4, part_no[i], price[i], dealer[i]])
+        final_list.append([ktype, make, model, model_type, part_category, part_name, cat1, cat2, cat3, cat4, part_no[i], price[i], brand[i]])
     return(tuple(final_list))
 
 def insert_into_database(final_data):
@@ -209,17 +210,22 @@ def reach_path():
 
                     print("Car type option - ",audi_type_option[j])
                     print("Car Type value - ",audi_type_option_value[j])
-                
+                    print("Position: ",part_category,part_name)
                     audi_type= audi_type_option[j]
 
                     post = audi_type_option_value[j]
                     url = pre + '?ktypnr=' + str(post)
                     browser.get(url)
                     scroll_bottom()
-                    count = 0
+                    
+                    
+                        
                     n_list,p_list,c_list = fetching(count)
-                    final_data = post_fetching(current_brand,current_model_name,audi_type,part_category,part_name,cat1,cat2,cat3,cat4,n_list,p_list,c_list)
-                    insert_into_database(final_data)
+                    if(n_list == None):
+                        continue
+                    final_data = post_fetching(post, current_brand, current_model_name, audi_type, part_category, part_name, cat1, cat2, cat3, cat4, n_list, p_list, c_list)
+                    print("done!")
+                    #insert_into_database(final_data)
 
 
 
@@ -235,5 +241,5 @@ browser.close()
     
 
 		
-print("done!")
+
 
